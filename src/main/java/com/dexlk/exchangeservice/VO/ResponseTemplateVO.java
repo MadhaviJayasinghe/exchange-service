@@ -1,14 +1,12 @@
 package com.dexlk.exchangeservice.VO;
 
-import com.dexlk.exchangeservice.model.ExchangeWallet;
-
-public class ResponseTemplate1VO {
+public class ResponseTemplateVO {
     private Wallet wallet;
 
-    public ResponseTemplate1VO() {
+    public ResponseTemplateVO() {
     }
 
-    public ResponseTemplate1VO(Wallet wallet) {
+    public ResponseTemplateVO(Wallet wallet) {
         this.wallet = wallet;
     }
 

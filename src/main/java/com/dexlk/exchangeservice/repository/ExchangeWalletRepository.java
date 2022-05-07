@@ -1,9 +1,10 @@
 package com.dexlk.exchangeservice.repository;
 
-import com.dexlk.exchangeservice.VO.ResponseTemplate1VO;
+import com.dexlk.exchangeservice.VO.ResponseTemplateVO;
 import com.dexlk.exchangeservice.VO.Wallet;
 import com.dexlk.exchangeservice.controller.ExchangeRateController;
 import com.dexlk.exchangeservice.model.ExchangeRate;
+import com.dexlk.exchangeservice.model.ExchangeWallet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,9 @@ public class ExchangeWalletRepository {
     @Autowired
     private ExchangeRateController exchangeRateController;
 
-    public ResponseTemplate1VO getWallet(String walletAddress) {
+    public ResponseTemplateVO getWallet(String walletAddress) {
         log.info("Inside getWalletBalance of ExchangeWalletService");
-        ResponseTemplate1VO vo = new ResponseTemplate1VO();
+        ResponseTemplateVO vo = new ResponseTemplateVO();
 
         Wallet wallet =
                 restTemplate.getForObject("http://localhost:9001/wallets/address/" + walletAddress
@@ -31,19 +32,19 @@ public class ExchangeWalletRepository {
         return vo;
     }
 
-    public void exchangeFund(String walletAddress, String convertFrom, String covertTo, Number amount) {
+    public void exchangeFund(String walletAddress, ExchangeWallet exchangeWallet) {
         log.info("Inside saveExchangeWallet of ExchangeWalletService");
-        ResponseTemplate1VO wallet = getWallet(walletAddress);
+        ResponseTemplateVO wallet = getWallet(walletAddress);
         Wallet walletDetails = wallet.getWallet();
-        ResponseEntity<ExchangeRate> exchangeRate = exchangeRateController.findRate(convertFrom, covertTo);
-        log.info("Inside saveExchangeWallet of ExchangeWalletService {}", exchangeRate.getBody().getExchangeAmount());
+        ResponseEntity<ExchangeRate> exchangeRate = exchangeRateController.findRate(exchangeWallet.getConvertFrom(), exchangeWallet.getConvertTo());
+        log.info("Inside saveExchangeWallet of ExchangeWalletService {}", exchangeWallet.getAmount());
 
         Number walletBalance = walletDetails.getUsdBalance();
-        if (walletBalance.intValue() > amount.intValue()) {
-            Number fund = exchangeRate.getBody().getExchangeAmount().intValue() * amount.intValue();
-            Number usdValue = wallet.getWallet().getUsdBalance().intValue() - amount.intValue();
+        if (walletBalance.intValue() > exchangeWallet.getAmount().intValue()) {
+            Number fund = exchangeRate.getBody().getExchangeAmount().intValue() * exchangeWallet.getAmount().intValue();
+            Number usdValue = wallet.getWallet().getUsdBalance().intValue() - exchangeWallet.getAmount().intValue();
             Number bitcoinVale = wallet.getWallet().getBitcoinBalance().intValue() + fund.intValue();
-//
+
             if (walletDetails.getUsdBalance() != null) {
                 walletDetails.setUsdBalance(usdValue);
             }
