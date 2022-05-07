@@ -7,3 +7,7 @@ amazon:
     url: dynamodb.ap-south-1.amazonaws.com
 server:
   port: 9002
+
+auth-url: http://localhost:9003/validate
+store-fund-url: http://localhost:9001/wallets/
+get-wallet-url: http://localhost:9001/wallets/address/

@@ -7,6 +7,7 @@ import com.dexlk.exchangeservice.model.ExchangeRate;
 import com.dexlk.exchangeservice.model.ExchangeWallet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
@@ -19,12 +20,18 @@ public class ExchangeWalletRepository {
     @Autowired
     private ExchangeRateController exchangeRateController;
 
+    @Value("${store-fund-url}")
+    private String storeFundUrl;
+
+    @Value("${get-wallet-url}")
+    private String getWalletUrl;
+
     public ResponseTemplateVO getWallet(String walletAddress) {
         log.info("Inside getWalletBalance of ExchangeWalletService");
         ResponseTemplateVO vo = new ResponseTemplateVO();
 
         Wallet wallet =
-                restTemplate.getForObject("http://localhost:9001/wallets/address/" + walletAddress
+                restTemplate.getForObject(getWalletUrl + walletAddress
                         , Wallet.class);
 
         vo.setWallet(wallet);
@@ -53,7 +60,7 @@ public class ExchangeWalletRepository {
                 walletDetails.setBitcoinBalance(bitcoinVale);
             }
 
-            restTemplate.postForObject("http://localhost:9001/wallets/" + walletAddress, walletDetails, Wallet.class);
+            restTemplate.postForObject(storeFundUrl + walletAddress, walletDetails, Wallet.class);
         } else {
             log.info("Inside saveExchangeWallet of ExchangeWalletService>>>>>>>>2");
         }
