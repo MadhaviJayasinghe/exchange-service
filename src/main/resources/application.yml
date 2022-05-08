@@ -6,8 +6,8 @@ amazon:
   end-point:
     url: dynamodb.ap-south-1.amazonaws.com
 server:
-  port: 9002
+  port: 80
 
-auth-url: http://localhost:9003/validate
-store-fund-url: http://localhost:9001/wallets/
-get-wallet-url: http://localhost:9001/wallets/address/
+auth-url: ${AUTH_URL:http://localhost:9003/validate}
+store-fund-url: ${STORE_FUND_URL:http://localhost:9001/wallets/}
+get-wallet-url: ${GET_WALLET_URL:http://localhost:9001/wallets/address/}
