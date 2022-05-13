@@ -26,7 +26,7 @@ public class ExchangeWalletController {
         return exchangeWalletRepository.getWallet(walletAddress);
     }
 
-    @PostMapping("/{walletAddress}")
+    @PostMapping("/exchange/{walletAddress}")
     public void exchangeFund(@PathVariable("walletAddress") String walletAddress, @RequestBody ExchangeWallet exchangeWallet, @RequestHeader Map<String, String> headers) {
         log.info("Inside exchangeFund of ExchangeWalletController");
         headers.forEach((key, value) -> {
